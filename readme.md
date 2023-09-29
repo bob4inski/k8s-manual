@@ -1,4 +1,4 @@
-# How to set up  1.28 k8s cluster
+# How to set up  1.28 k8s cluster on ubuntu 22.04
 [link1](https://computingforgeeks.com/install-kubernetes-cluster-ubuntu-jammy/)
 
 https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/
