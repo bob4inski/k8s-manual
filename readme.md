@@ -132,6 +132,7 @@ kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/
 sudo rm -rf /var/lib/etcd && sudo rm -rf /var/lib/kubelet/ && rm -rf  $HOME/.kube && sudo rm -rf /etc/cni/ && sudo rm -rf /etc/kubernetes/
 #remove all after kubeadm reset
 ```
+- [Посмотреть сюда](https://github.com/justmeandopensource/kubernetes/tree/master/docs)
 - [clean-up](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/#tear-down)
 
 - [set-up-kubeadm](https://kubernetes.io/docs/reference/setup-tools/kubeadm/)
