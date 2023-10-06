@@ -1,10 +1,24 @@
-# How to set up  1.28 k8s cluster on ubuntu 22.04
+# How to set up  1.28 k8s cluster
+
+
+[Варианты реализации HA](https://github.com/kubernetes/kubeadm/blob/main/docs/ha-considerations.md)
+
+[HA](https://www.linuxtechi.com/setup-highly-available-kubernetes-cluster-kubeadm/)
+
+
+[Отсюда я взял большую часть команд](https://www.linuxtechi.com/install-kubernetes-on-ubuntu-22-04/)
+
+
 [link1](https://computingforgeeks.com/install-kubernetes-cluster-ubuntu-jammy/)
 
-https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/
 
-[link2](https://www.linuxtechi.com/install-kubernetes-on-ubuntu-22-04/)
+
+
 ##  Prepare nodes 
+> nodes
+```
+
+```
 
 ### Remove old docker
 ```
@@ -111,20 +125,23 @@ kubeadm token create --print-join-command
 #copy output commad 
 ```
 
-then on master-2
+than on master-2
 
 ```shell
 print-join-command --control-plane --certificate-key <key from upload certs>
 ```
 
 
-3. 
+3. Apply network 
 ```shell
 kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml
 ```
-
-
-
+4. reload daemons and restart cri-socket + kubelet to apply network
+```shell
+sudo systemctl daemon-reload
+sudo systemctl restart containerd kubelet
+```
+sudo kubeadm join 172.22.100.80:6443 --token tzzh2r.e9fstpy4lv34sm3j --discovery-token-ca-cert-hash sha256:30fffd56ed8694cfa709d1b099d08e8a1ed731673f011093c8af5489ba0a9260 --control-plane --certificate-key 682148681f016aa37c7bd659bbd71b7d1f00af9ff5284efa705f78a982d9d976
 
 
 # links and commands
@@ -132,7 +149,12 @@ kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/
 sudo rm -rf /var/lib/etcd && sudo rm -rf /var/lib/kubelet/ && rm -rf  $HOME/.kube && sudo rm -rf /etc/cni/ && sudo rm -rf /etc/kubernetes/
 #remove all after kubeadm reset
 ```
+
+```shell
+kubeadm reset --cri-socket unix:///var/run/containerd/containerd.sock
+```
 - [Посмотреть сюда](https://github.com/justmeandopensource/kubernetes/tree/master/docs)
+
 - [clean-up](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/#tear-down)
 
 - [set-up-kubeadm](https://kubernetes.io/docs/reference/setup-tools/kubeadm/)
@@ -145,7 +167,7 @@ sudo rm -rf /var/lib/etcd && sudo rm -rf /var/lib/kubelet/ && rm -rf  $HOME/.kub
 
 - [ha cluster](https://medium.com/velotio-perspectives/demystifying-high-availability-in-kubernetes-using-kubeadm-3d83ed8c458b#:~:text=High%20Availability%20in%20action,more%20pods%2C%20deployment%20services%20etc.)
 
-
+- [fix failed etcd member](https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/#replacing-a-failed-etcd-member)
 
 # ERRORS
 ## FileContent--proc-sys-net-bridge-bridge-nf-call-iptables: /proc/sys/net/bridge/bridge-nf-call-iptables does not exist
@@ -167,7 +189,17 @@ systemctl restart containerd
 ```
 
 
+# Live huck
+To pull images from private repo:
+``` bash
+kubectl create secret docker-registry <name> --docker-username=<username>   --docker-password=<password>
+```
 
+and add this to the end of manifest
+```yml
+imagePullSecrets:
+        - name: <name>
+```
 
 
 
