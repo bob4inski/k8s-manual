@@ -1,13 +1,15 @@
 # How to set up  1.28 k8s cluster
 
 
-[Варианты реализации HA](https://github.com/kubernetes/kubeadm/blob/main/docs/ha-considerations.md)
+[Варианты реализации HA](https://github.com/kubernetes/kubeadm/blob/main/docs/ha-considerations.md) 
+`Надо попробовать 1 или 2 вариант (обязательно нечетное количество мастеров)`
 
 [HA](https://www.linuxtechi.com/setup-highly-available-kubernetes-cluster-kubeadm/)
 
 
 [Отсюда я взял большую часть команд](https://www.linuxtechi.com/install-kubernetes-on-ubuntu-22-04/)
 
+[Еще полезная инфа](https://www.linuxtechi.com/setup-highly-available-kubernetes-cluster-kubeadm/)
 
 [link1](https://computingforgeeks.com/install-kubernetes-cluster-ubuntu-jammy/)
 
@@ -15,10 +17,8 @@
 
 
 ##  Prepare nodes 
-> nodes
-```
 
-```
+
 
 ### Remove old docker
 ```
@@ -142,8 +142,16 @@ sudo systemctl daemon-reload
 sudo systemctl restart containerd kubelet
 ```
 sudo kubeadm join 172.22.100.80:6443 --token tzzh2r.e9fstpy4lv34sm3j --discovery-token-ca-cert-hash sha256:30fffd56ed8694cfa709d1b099d08e8a1ed731673f011093c8af5489ba0a9260 --control-plane --certificate-key 682148681f016aa37c7bd659bbd71b7d1f00af9ff5284efa705f78a982d9d976
+## Если хотите добавить центос мастера, а не получается, то скорее всего это решение
+> Проблема 
 
+```"CreatePodSandbox for pod failed" err="open /run/systemd/resolve/resolv.conf: no such file or directory"```
 
+> Решение
+```bash
+sudo mkdir -p /run/systemd/resolve
+sudo ln -s /etc/resolv.conf /run/systemd/resolve/resolv.conf
+```
 # links and commands
 ```shell
 sudo rm -rf /var/lib/etcd && sudo rm -rf /var/lib/kubelet/ && rm -rf  $HOME/.kube && sudo rm -rf /etc/cni/ && sudo rm -rf /etc/kubernetes/
@@ -200,7 +208,6 @@ and add this to the end of manifest
 imagePullSecrets:
         - name: <name>
 ```
-
 
 
 
